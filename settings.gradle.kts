@@ -1,0 +1,2 @@
+rootProject.name = "clothes-shopping"
+
