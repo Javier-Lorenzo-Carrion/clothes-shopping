@@ -1,10 +1,13 @@
 package com.lorenzoconsultores.clothesshopping;
 
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
+@Service
 public class UserService {
 
     private final UserRepository userRepository;
