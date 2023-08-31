@@ -1,5 +1,6 @@
-package com.lorenzoconsultores.clothesshopping;
+package com.lorenzoconsultores.clothesshopping.infrastructure.persistence.entities;
 
+import com.lorenzoconsultores.clothesshopping.business.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -21,6 +22,15 @@ public class UserEntity {
     private String birthDate;
     @Column(name = "email")
     private String email;
+
+    public UserEntity(){}
+    public UserEntity(UUID id, String name, String lastName, String birthDate, String email){
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.email = email;
+    }
 
     public UUID getId() {
         return id;
@@ -60,5 +70,9 @@ public class UserEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public static UserEntity fromUser(User user){
+        return new UserEntity(UUID.fromString(user.getId()), user.getName(), user.getLastName(), user.getBirthDate(), user.getEmail());
     }
 }
