@@ -1,11 +1,13 @@
 package com.lorenzoconsultores.clothesshopping;
 
+import com.lorenzoconsultores.clothesshopping.business.application.UserService;
+import com.lorenzoconsultores.clothesshopping.business.domain.InvalidUserException;
+import com.lorenzoconsultores.clothesshopping.business.domain.User;
+import com.lorenzoconsultores.clothesshopping.business.domain.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.assertj.core.api.Assertions;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-
-import static org.mockito.Mockito.when;
 
 class UserServiceTest {
     private final UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
