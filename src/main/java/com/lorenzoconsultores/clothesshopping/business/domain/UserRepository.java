@@ -1,7 +1,8 @@
 package com.lorenzoconsultores.clothesshopping.business.domain;
 
-import com.lorenzoconsultores.clothesshopping.business.domain.User;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserRepository {
     void save(User user);
 

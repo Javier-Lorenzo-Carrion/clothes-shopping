@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  db:
+    image: "postgres:16.0-alpine3.18"
+    environment:
+      POSTGRES_PASSWORD: "culaso"
+      POSTGRES_USER: "test"
+      POSTGRES_DB: "clothes-shopping"
+    ports:
+      - "5432:5432"
