@@ -28,5 +28,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
+      - name: Fix gradlew file permission
+        run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
