@@ -1,4 +1,4 @@
-package com.lorenzoconsultores.clothesshopping.infrastructure.rest;
+package com.lorenzoconsultores.clothesshopping.infrastructure.rest.user;
 
 import com.lorenzoconsultores.clothesshopping.business.application.UserService;
 import org.springframework.http.HttpStatus;

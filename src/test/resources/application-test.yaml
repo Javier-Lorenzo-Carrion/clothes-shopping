@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/clothes-shopping-test
+    username: test
+    password: culaso

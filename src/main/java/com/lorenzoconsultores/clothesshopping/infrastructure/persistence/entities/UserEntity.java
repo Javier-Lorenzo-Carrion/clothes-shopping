@@ -80,4 +80,8 @@ public class UserEntity {
     public static UserEntity fromUser(User user) {
         return new UserEntity(UUID.fromString(user.getId()), user.getName(), user.getLastName(), user.getBirthDate(), user.getEmail());
     }
+
+    public User toUser() {
+        return new User(id.toString(), name, lastName, birthDate, email);
+    }
 }

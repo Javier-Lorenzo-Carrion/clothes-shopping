@@ -1,4 +1,4 @@
-package com.lorenzoconsultores.clothesshopping.infrastructure.rest;
+package com.lorenzoconsultores.clothesshopping.infrastructure.rest.user;
 
 public class CreateUserRequest {
 
