@@ -5,6 +5,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.type.descriptor.jdbc.UUIDJdbcType;
 
 import java.util.UUID;
 
@@ -13,6 +15,7 @@ import java.util.UUID;
 public class UserEntity {
 
     @Id
+    @JdbcType(UUIDJdbcType.class)
     private UUID id;
     @Column(name = "name")
     private String name;
@@ -23,8 +26,10 @@ public class UserEntity {
     @Column(name = "email")
     private String email;
 
-    public UserEntity(){}
-    public UserEntity(UUID id, String name, String lastName, String birthDate, String email){
+    public UserEntity() {
+    }
+
+    public UserEntity(UUID id, String name, String lastName, String birthDate, String email) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -72,7 +77,11 @@ public class UserEntity {
         this.email = email;
     }
 
-    public static UserEntity fromUser(User user){
+    public static UserEntity fromUser(User user) {
         return new UserEntity(UUID.fromString(user.getId()), user.getName(), user.getLastName(), user.getBirthDate(), user.getEmail());
+    }
+
+    public User toUser() {
+        return new User(id.toString(), name, lastName, birthDate, email);
     }
 }

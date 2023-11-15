@@ -1,16 +1,16 @@
-package com.lorenzoconsultores.clothesshopping;
+package com.lorenzoconsultores.clothesshopping.business.application;
 
-import com.lorenzoconsultores.clothesshopping.business.application.UserService;
 import com.lorenzoconsultores.clothesshopping.business.domain.InvalidUserException;
 import com.lorenzoconsultores.clothesshopping.business.domain.User;
 import com.lorenzoconsultores.clothesshopping.business.domain.UserRepository;
-import org.junit.jupiter.api.Test;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 class UserServiceTest {
     private final UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
+
     // los campos requeridos son name, lastName, birthDate y email
     // que la fecha de nacimiento sea valida (el usuario tiene que ser mayor de edad y el formato de fecha debe ser el esperado que será el formato espaniol)
     // que el email sea valido
