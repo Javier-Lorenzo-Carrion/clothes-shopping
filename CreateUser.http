@@ -3,8 +3,11 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "name": "Ramiro",
-  "lastName": "Lopez",
-  "birthDate": "15/03/1999",
-  "email": "ramiro@gmail.com"
+  "name": "John",
+  "lastName": "Doe",
+  "birthDate": "01/01/1970",
+  "email": "johndoe@localhost"
 }
+
+### GET all users
+GET http://localhost:8080/users?birthDate.gt=01/01/1970&birthDate.lt=01/01/1971

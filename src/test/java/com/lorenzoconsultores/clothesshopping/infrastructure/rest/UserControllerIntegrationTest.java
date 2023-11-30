@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -60,6 +61,32 @@ public class UserControllerIntegrationTest {
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is("Invalid email, peperojas@gmail.com is already in use")));
 
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /users")
+    class GetUsers {
+        @Test
+        public void should_return_all_users() throws Exception {
+            UserEntity user1 = new UserEntity(UUID.randomUUID(), "Pepe", "Rojas", "15/03/1989", "peperojas@gmail.com");
+            UserEntity user2 = new UserEntity(UUID.randomUUID(), "John", "Doe", "01/01/1970", "johndoe@localhost");
+
+            userJPARepository.saveAllAndFlush(List.of(user1, user2));
+
+            mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(user1.getId().toString())))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is("Pepe")))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName", Matchers.is("Rojas")))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].birthDate", Matchers.is("15/03/1989")))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[0].email", Matchers.is("peperojas@gmail.com")))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[1].id", Matchers.is(user2.getId().toString())))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is("John")))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[1].lastName", Matchers.is("Doe")))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[1].birthDate", Matchers.is("01/01/1970")))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$[1].email", Matchers.is("johndoe@localhost")));
         }
     }
 }

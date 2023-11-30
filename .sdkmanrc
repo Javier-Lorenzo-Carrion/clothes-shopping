@@ -1,3 +1,4 @@
 # Enable auto-env through the sdkman_auto_env config
+# or running the following command on your terminal: `sdk env install`
 # Add key=value pairs of SDKs to use below
 java=17.0.9-amzn
