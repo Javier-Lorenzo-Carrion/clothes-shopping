@@ -6,6 +6,7 @@ import com.lorenzoconsultores.clothesshopping.infrastructure.persistence.entitie
 import com.lorenzoconsultores.clothesshopping.infrastructure.persistence.jpa.UserJPARepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -26,5 +27,10 @@ public class PostgreUserRepository implements UserRepository {
     @Override
     public Optional<User> findByEmail(String email) {
         return userJPARepository.findByEmail(email).map(UserEntity::toUser);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userJPARepository.findAll().stream().map(UserEntity::toUser).toList();
     }
 }

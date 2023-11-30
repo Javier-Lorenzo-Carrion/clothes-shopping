@@ -5,6 +5,8 @@ import com.lorenzoconsultores.clothesshopping.business.domain.User;
 import com.lorenzoconsultores.clothesshopping.business.domain.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -21,5 +23,9 @@ public class UserService {
         User userToCreate = User.create(name, lastName, birthDate, email);
         userRepository.save(userToCreate);
         return userToCreate;
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }
