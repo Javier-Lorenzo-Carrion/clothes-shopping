@@ -3,10 +3,10 @@ package com.lorenzoconsultores.clothesshopping.business.application;
 import com.lorenzoconsultores.clothesshopping.business.domain.InvalidUserException;
 import com.lorenzoconsultores.clothesshopping.business.domain.User;
 import com.lorenzoconsultores.clothesshopping.business.domain.UserRepository;
+import com.lorenzoconsultores.clothesshopping.business.domain.UserToUpdate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -30,13 +30,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void update(String id, Optional<String> newName, Optional<String> newLastName, Optional<String> newBirthDate, Optional<String> newEmail) {
-        User userToUpdate = userRepository.findById(id).get();
-        newName.ifPresent(userToUpdate::setName);
-        newLastName.ifPresent(userToUpdate::setLastName);
-        newBirthDate.ifPresent(userToUpdate::setBirthDate);
-        newEmail.ifPresent(userToUpdate::setEmail);
-        userRepository.save(userToUpdate);
+    public void update(String id, UserToUpdate userToUpdate) {
+        User foundUser = userRepository.findById(id).get();
+        foundUser.update(userToUpdate);
+        userRepository.save(foundUser);
     }
 
 

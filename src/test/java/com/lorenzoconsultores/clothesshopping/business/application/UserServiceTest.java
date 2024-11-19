@@ -3,6 +3,7 @@ package com.lorenzoconsultores.clothesshopping.business.application;
 import com.lorenzoconsultores.clothesshopping.business.domain.InvalidUserException;
 import com.lorenzoconsultores.clothesshopping.business.domain.User;
 import com.lorenzoconsultores.clothesshopping.business.domain.UserRepository;
+import com.lorenzoconsultores.clothesshopping.business.domain.UserToUpdate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -76,8 +77,8 @@ class UserServiceTest {
         UserService userService = new UserService(mockUserRepository);
         Mockito.when(mockUserRepository.findById(userUpdateable.getId())).thenReturn(Optional.of(userUpdateable));
         //When
-        userService.update(userUpdateable.getId(), Optional.of("Chano"), Optional.empty(), Optional.empty(), Optional.empty());
-        //Then
+        UserToUpdate userToUpdate = new UserToUpdate("Chano", null, null, null);
+        userService.update(userUpdateable.getId(), userToUpdate);     //Then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         Mockito.verify(mockUserRepository).save(userArgumentCaptor.capture());
         User actual = userArgumentCaptor.getValue();
