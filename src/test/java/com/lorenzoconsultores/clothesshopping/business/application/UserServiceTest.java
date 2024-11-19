@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import java.util.List;
+import java.util.Optional;
+
 class UserServiceTest {
     private final UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
 
@@ -40,6 +43,49 @@ class UserServiceTest {
         Assertions.assertThatThrownBy(() -> userService.create("Javier", "Lorenzo Carrion", "17-03-1989", "javierlorenzocarrion@gmail.com"))
                 .isInstanceOf(InvalidUserException.class)
                 .hasMessage("Birth date must have a valid format like \"dd/MM/yyyy\"");
+    }
+
+    @Test
+    public void should_throw_an_exception_when_email_is_not_valid() {
+        //Given
+        UserService userService = new UserService(mockUserRepository);
+        //When Then
+        Assertions.assertThatThrownBy(() -> userService.create("Javier", "Lorenzo Carrion", "17/03/1989", "javierlorenzocarrion.com"))
+                .isInstanceOf(InvalidUserException.class)
+                .hasMessage("Email must have a valid format like \"john.doe@example.org\"");
+    }
+
+    @Test
+    public void should_retrieve_all_users() {
+        //Given
+        UserService userService = new UserService(mockUserRepository);
+        User userJavier = new User("234567654", "Javi", "Lorenzo Carrion", "17/03/1989", "javierlorenzocarrion@gmail.com");
+        User userMiguel = new User("234fdvdcfsdvc4", "Miguel", "Lorenzo Carrion", "17/03/1989", "javierlo@gmail.com");
+        User userSergio = new User("23456fddvcfd7654", "Sergio", "Lorenzo Carrion", "17/03/1989", "jav@gmail.com");
+        Mockito.when(mockUserRepository.findAll()).thenReturn(List.of(userJavier, userMiguel, userSergio));
+        //When
+        List<User> actual = userService.findAll();
+        //Then
+        Assertions.assertThat(actual).containsExactly(userJavier, userMiguel, userSergio);
+    }
+
+    @Test
+    public void should_update_user() {
+        //Given
+        User userUpdateable = new User("4567897", "Paco", "Alvarez Lugo", "01/01/2000", "paco@gmail.com");
+        UserService userService = new UserService(mockUserRepository);
+        Mockito.when(mockUserRepository.findById(userUpdateable.getId())).thenReturn(Optional.of(userUpdateable));
+        //When
+        userService.update(userUpdateable.getId(), Optional.of("Chano"), Optional.empty(), Optional.empty(), Optional.empty());
+        //Then
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        Mockito.verify(mockUserRepository).save(userArgumentCaptor.capture());
+        User actual = userArgumentCaptor.getValue();
+        Assertions.assertThat(actual.getId()).isEqualTo(userUpdateable.getId());
+        Assertions.assertThat(actual.getName()).isEqualTo("Chano");
+        Assertions.assertThat(actual.getLastName()).isEqualTo(userUpdateable.getLastName());
+        Assertions.assertThat(actual.getBirthDate()).isEqualTo(userUpdateable.getBirthDate());
+        Assertions.assertThat(actual.getEmail()).isEqualTo(userUpdateable.getEmail());
     }
 
 }
