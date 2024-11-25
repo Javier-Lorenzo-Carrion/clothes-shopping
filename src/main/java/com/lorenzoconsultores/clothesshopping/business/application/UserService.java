@@ -1,9 +1,6 @@
 package com.lorenzoconsultores.clothesshopping.business.application;
 
-import com.lorenzoconsultores.clothesshopping.business.domain.InvalidUserException;
-import com.lorenzoconsultores.clothesshopping.business.domain.User;
-import com.lorenzoconsultores.clothesshopping.business.domain.UserRepository;
-import com.lorenzoconsultores.clothesshopping.business.domain.UserToUpdate;
+import com.lorenzoconsultores.clothesshopping.business.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +14,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User create(String name, String lastName, String birthDate, String email) {
-        userRepository.findByEmail(email).ifPresent(existingUser -> {
+    public User create(CreateOrEditableUserFields fields) {
+        userRepository.findByEmail(fields.email()).ifPresent(existingUser -> {
             throw new InvalidUserException(String.format("Email, %s, is already in use", existingUser.getEmail()));
         });
-        User userToCreate = User.create(name, lastName, birthDate, email);
+        User userToCreate = User.create(fields);
         userRepository.save(userToCreate);
         return userToCreate;
     }
@@ -30,15 +27,27 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void update(String id, UserToUpdate userToUpdate) {
-        User foundUser = userRepository.findById(id).get();
-        foundUser.update(userToUpdate);
-        userRepository.save(foundUser);
+    public void update(String id, CreateOrEditableUserFields fields) {
+        User userToUpdate = userRepository.findById(id).get();
+        userToUpdate.update(fields);
+        userRepository.save(userToUpdate);
+    }
+
+    public void delete(String id) {
+        User userToDelete = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        //userToDelete.delete(userToDelete);
+        userRepository.delete(userToDelete);
+    }
+
+    public User getUser(String id) {
+        User userGetted = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return userGetted;
     }
 
 
-    // TODO: Crear métodos update. El update debe recibir un id y los campos que se van a modificar. (el save ya creado sirve para este caso)
-    // TODO: Crear metodo delete. El metodo debe recibir un id y tal...
-    // TODO: Crear un metodo get que devuelva un usuario. Debe recibir un id.
+    // TODO CON MIGUE: Validar update.
+    // TODO PA CASA: Crear metodo delete. El metodo debe recibir un id y tal...
+    // TODO PA CASA: Crear un metodo get que devuelva un usuario. Debe recibir un id.
+    // TODO PA CASA: Refactor create para hacerlo con un DTO (como update)
 
 }

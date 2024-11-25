@@ -1,9 +1,6 @@
 package com.lorenzoconsultores.clothesshopping.business.application;
 
-import com.lorenzoconsultores.clothesshopping.business.domain.InvalidUserException;
-import com.lorenzoconsultores.clothesshopping.business.domain.User;
-import com.lorenzoconsultores.clothesshopping.business.domain.UserRepository;
-import com.lorenzoconsultores.clothesshopping.business.domain.UserToUpdate;
+import com.lorenzoconsultores.clothesshopping.business.domain.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -24,7 +21,8 @@ class UserServiceTest {
         //Given
         UserService userService = new UserService(mockUserRepository);
         //When
-        userService.create("Javier", "Lorenzo Carrion", "17/03/1989", "javierlorenzocarrion@gmail.com");
+        CreateOrEditableUserFields fields = new CreateOrEditableUserFields("Javier", "Lorenzo Carrion", "17/03/1989", "javierlorenzocarrion@gmail.com");
+        userService.create(fields);
         //Then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         Mockito.verify(mockUserRepository).save(userArgumentCaptor.capture());
@@ -41,7 +39,8 @@ class UserServiceTest {
         //Given
         UserService userService = new UserService(mockUserRepository);
         //When Then
-        Assertions.assertThatThrownBy(() -> userService.create("Javier", "Lorenzo Carrion", "17-03-1989", "javierlorenzocarrion@gmail.com"))
+        CreateOrEditableUserFields fields = new CreateOrEditableUserFields("Javier", "Lorenzo Carrion", "17-03-1989", "javierlorenzocarrion@gmail.com");
+        Assertions.assertThatThrownBy(() -> userService.create(fields))
                 .isInstanceOf(InvalidUserException.class)
                 .hasMessage("Birth date must have a valid format like \"dd/MM/yyyy\"");
     }
@@ -51,7 +50,8 @@ class UserServiceTest {
         //Given
         UserService userService = new UserService(mockUserRepository);
         //When Then
-        Assertions.assertThatThrownBy(() -> userService.create("Javier", "Lorenzo Carrion", "17/03/1989", "javierlorenzocarrion.com"))
+        CreateOrEditableUserFields fields = new CreateOrEditableUserFields("Javier", "Lorenzo Carrion", "17/03/1989", "javierlorenzocarrion.com");
+        Assertions.assertThatThrownBy(() -> userService.create(fields))
                 .isInstanceOf(InvalidUserException.class)
                 .hasMessage("Email must have a valid format like \"john.doe@example.org\"");
     }
@@ -77,8 +77,8 @@ class UserServiceTest {
         UserService userService = new UserService(mockUserRepository);
         Mockito.when(mockUserRepository.findById(userUpdateable.getId())).thenReturn(Optional.of(userUpdateable));
         //When
-        UserToUpdate userToUpdate = new UserToUpdate("Chano", null, null, null);
-        userService.update(userUpdateable.getId(), userToUpdate);     //Then
+        CreateOrEditableUserFields createOrEditableUserFields = new CreateOrEditableUserFields("Chano", null, null, null);
+        userService.update(userUpdateable.getId(), createOrEditableUserFields);     //Then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         Mockito.verify(mockUserRepository).save(userArgumentCaptor.capture());
         User actual = userArgumentCaptor.getValue();
@@ -87,6 +87,61 @@ class UserServiceTest {
         Assertions.assertThat(actual.getLastName()).isEqualTo(userUpdateable.getLastName());
         Assertions.assertThat(actual.getBirthDate()).isEqualTo(userUpdateable.getBirthDate());
         Assertions.assertThat(actual.getEmail()).isEqualTo(userUpdateable.getEmail());
+    }
+
+    @Test
+    public void should_delete_user() {
+        //Given
+        User userToDelete = new User("4567889098", "Maria", "Lopez Obrador", "01/01/1999", "maria@gmail.com");
+        UserService userService = new UserService(mockUserRepository);
+        Mockito.when(mockUserRepository.findById(userToDelete.getId())).thenReturn(Optional.of(userToDelete));
+        //When
+        userService.delete(userToDelete.getId());
+        //Then
+        Mockito.verify(mockUserRepository).delete(userToDelete);
+        Mockito.when(mockUserRepository.findById(userToDelete.getId())).thenReturn(Optional.empty());
+        Assertions.assertThat(mockUserRepository.findById(userToDelete.getId())).isEmpty();
+    }
+
+    @Test
+    public void should_throw_an_exception_when_delete_a_non_exist_user() {
+        //Given
+        User userToDelete = new User("3456789", "Jose", "Tomas Barreto", "15/10/2000", "josebarreto@gmail.comm");
+        UserService userService = new UserService(mockUserRepository);
+        Mockito.when(mockUserRepository.findById(userToDelete.getId())).thenReturn(Optional.empty());
+        //When //Then
+        Assertions.assertThatThrownBy(() -> userService.delete(userToDelete.getId()))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User not found");
+    }
+
+    @Test
+    public void should_retrieve_a_user_byId() {
+        //Given
+        User userToGet = new User("4356789", "Manuel", "Perez Chacon", "10/07/1997", "manuelchacon@gmail.com");
+        UserService userService = new UserService(mockUserRepository);
+        Mockito.when(mockUserRepository.findById(userToGet.getId())).thenReturn(Optional.of(userToGet));
+        //When
+        User userGetted = userService.getUser(userToGet.getId());
+        //Then
+        Assertions.assertThat(userGetted).isEqualTo(userToGet);
+        Assertions.assertThat(userGetted.getId()).isEqualTo(userToGet.getId());
+        Assertions.assertThat(userGetted.getName()).isEqualTo(userToGet.getName());
+        Assertions.assertThat(userGetted.getLastName()).isEqualTo(userToGet.getLastName());
+        Assertions.assertThat(userGetted.getBirthDate()).isEqualTo(userToGet.getBirthDate());
+        Assertions.assertThat(userGetted.getEmail()).isEqualTo(userToGet.getEmail());
+    }
+
+    @Test
+    public void should_throw_an_exception_when_user_is_not_found() {
+        //Given
+        User userToGet = new User("435678", "Benito", "Perdomo Perez", "02/02/1975", "benito@gmail.com");
+        UserService userService = new UserService(mockUserRepository);
+        Mockito.when(mockUserRepository.findById(userToGet.getId())).thenReturn(Optional.empty());
+        //When //Then
+        Assertions.assertThatThrownBy(() -> userService.getUser(userToGet.getId()))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User not found");
     }
 
 }
