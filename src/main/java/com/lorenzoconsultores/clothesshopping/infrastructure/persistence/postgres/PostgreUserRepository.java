@@ -38,5 +38,9 @@ public class PostgreUserRepository implements UserRepository {
     public Optional<User> findById(String id) {
         return userJPARepository.findById(id).map(UserEntity::toUser);
     }
+
+    public void delete(User user) {
+        userJPARepository.delete(UserEntity.fromUser(user));
+    }
 }
 
