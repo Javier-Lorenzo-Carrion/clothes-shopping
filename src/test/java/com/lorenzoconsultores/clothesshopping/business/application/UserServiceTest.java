@@ -76,9 +76,10 @@ class UserServiceTest {
         User userUpdateable = new User("4567897", "Paco", "Alvarez Lugo", "01/01/2000", "paco@gmail.com");
         UserService userService = new UserService(mockUserRepository);
         Mockito.when(mockUserRepository.findById(userUpdateable.getId())).thenReturn(Optional.of(userUpdateable));
-        //When
         EditableUserFields editableUserFields = new EditableUserFields("Chano", null, null, null);
-        userService.update(userUpdateable.getId(), editableUserFields);     //Then
+        //When
+        userService.update(userUpdateable.getId(), editableUserFields);
+        //Then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         Mockito.verify(mockUserRepository).save(userArgumentCaptor.capture());
         User actual = userArgumentCaptor.getValue();
@@ -87,6 +88,19 @@ class UserServiceTest {
         Assertions.assertThat(actual.getLastName()).isEqualTo(userUpdateable.getLastName());
         Assertions.assertThat(actual.getBirthDate()).isEqualTo(userUpdateable.getBirthDate());
         Assertions.assertThat(actual.getEmail()).isEqualTo(userUpdateable.getEmail());
+    }
+
+    @Test
+    public void should_throw_an_exception_when_update_a_non_existing_user() {
+        //Given
+        User userUpdateable = new User("4567897", "Paco", "Alvarez Lugo", "01/01/2000", "paco@gmail.com");
+        UserService userService = new UserService(mockUserRepository);
+        Mockito.when(mockUserRepository.findById(userUpdateable.getId())).thenReturn(Optional.empty());
+        EditableUserFields editableUserFields = new EditableUserFields("Chano", null, null, null);
+        //When //Then
+        Assertions.assertThatThrownBy(() -> userService.update(userUpdateable.getId(), editableUserFields))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User not found");
     }
 
     @Test

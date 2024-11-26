@@ -28,20 +28,18 @@ public class UserService {
     }
 
     public void update(String id, EditableUserFields fields) {
-        User userToUpdate = userRepository.findById(id).get();
+        User userToUpdate = getUser(id);
         userToUpdate.update(fields);
         userRepository.save(userToUpdate);
     }
 
     public void delete(String id) {
-        User userToDelete = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
-        //userToDelete.delete(userToDelete);
+        User userToDelete = getUser(id);
         userRepository.delete(userToDelete);
     }
 
     public User getUser(String id) {
-        User userGetted = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
-        return userGetted;
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
 
