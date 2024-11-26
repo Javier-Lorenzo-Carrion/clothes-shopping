@@ -21,7 +21,7 @@ class UserServiceTest {
         //Given
         UserService userService = new UserService(mockUserRepository);
         //When
-        CreateOrEditableUserFields fields = new CreateOrEditableUserFields("Javier", "Lorenzo Carrion", "17/03/1989", "javierlorenzocarrion@gmail.com");
+        CreatableUserFields fields = new CreatableUserFields("Javier", "Lorenzo Carrion", "17/03/1989", "javierlorenzocarrion@gmail.com");
         userService.create(fields);
         //Then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -39,7 +39,7 @@ class UserServiceTest {
         //Given
         UserService userService = new UserService(mockUserRepository);
         //When Then
-        CreateOrEditableUserFields fields = new CreateOrEditableUserFields("Javier", "Lorenzo Carrion", "17-03-1989", "javierlorenzocarrion@gmail.com");
+        CreatableUserFields fields = new CreatableUserFields("Javier", "Lorenzo Carrion", "17-03-1989", "javierlorenzocarrion@gmail.com");
         Assertions.assertThatThrownBy(() -> userService.create(fields))
                 .isInstanceOf(InvalidUserException.class)
                 .hasMessage("Birth date must have a valid format like \"dd/MM/yyyy\"");
@@ -50,7 +50,7 @@ class UserServiceTest {
         //Given
         UserService userService = new UserService(mockUserRepository);
         //When Then
-        CreateOrEditableUserFields fields = new CreateOrEditableUserFields("Javier", "Lorenzo Carrion", "17/03/1989", "javierlorenzocarrion.com");
+        CreatableUserFields fields = new CreatableUserFields("Javier", "Lorenzo Carrion", "17/03/1989", "javierlorenzocarrion.com");
         Assertions.assertThatThrownBy(() -> userService.create(fields))
                 .isInstanceOf(InvalidUserException.class)
                 .hasMessage("Email must have a valid format like \"john.doe@example.org\"");
@@ -77,8 +77,8 @@ class UserServiceTest {
         UserService userService = new UserService(mockUserRepository);
         Mockito.when(mockUserRepository.findById(userUpdateable.getId())).thenReturn(Optional.of(userUpdateable));
         //When
-        CreateOrEditableUserFields createOrEditableUserFields = new CreateOrEditableUserFields("Chano", null, null, null);
-        userService.update(userUpdateable.getId(), createOrEditableUserFields);     //Then
+        EditableUserFields editableUserFields = new EditableUserFields("Chano", null, null, null);
+        userService.update(userUpdateable.getId(), editableUserFields);     //Then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         Mockito.verify(mockUserRepository).save(userArgumentCaptor.capture());
         User actual = userArgumentCaptor.getValue();
@@ -99,8 +99,6 @@ class UserServiceTest {
         userService.delete(userToDelete.getId());
         //Then
         Mockito.verify(mockUserRepository).delete(userToDelete);
-        Mockito.when(mockUserRepository.findById(userToDelete.getId())).thenReturn(Optional.empty());
-        Assertions.assertThat(mockUserRepository.findById(userToDelete.getId())).isEmpty();
     }
 
     @Test

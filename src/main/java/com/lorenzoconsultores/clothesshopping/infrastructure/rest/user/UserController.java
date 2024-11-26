@@ -1,7 +1,6 @@
 package com.lorenzoconsultores.clothesshopping.infrastructure.rest.user;
 
 import com.lorenzoconsultores.clothesshopping.business.application.UserService;
-import com.lorenzoconsultores.clothesshopping.business.domain.CreateOrEditableUserFields;
 import com.lorenzoconsultores.clothesshopping.business.domain.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody CreateUserRequest createUserRequest) {
-        userService.create(new CreateOrEditableUserFields(createUserRequest.getName(), createUserRequest.getLastName(), createUserRequest.getBirthDate(), createUserRequest.getEmail()));
+        userService.create(createUserRequest.toFields());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

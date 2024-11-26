@@ -1,5 +1,7 @@
 package com.lorenzoconsultores.clothesshopping.infrastructure.rest.user;
 
+import com.lorenzoconsultores.clothesshopping.business.domain.CreatableUserFields;
+
 public class CreateUserRequest {
 
     private String name;
@@ -44,5 +46,9 @@ public class CreateUserRequest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public CreatableUserFields toFields() {
+        return new CreatableUserFields(name, lastName, birthDate, email);
     }
 }
