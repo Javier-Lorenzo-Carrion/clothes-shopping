@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class PostgreUserRepository implements UserRepository {
@@ -36,7 +37,7 @@ public class PostgreUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(String id) {
-        return userJPARepository.findById(id).map(UserEntity::toUser);
+        return userJPARepository.findById(UUID.fromString(id)).map(UserEntity::toUser);
     }
 
     public void delete(User user) {
