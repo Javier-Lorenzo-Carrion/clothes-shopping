@@ -28,24 +28,17 @@ public class UserService {
     }
 
     public void update(String id, EditableUserFields fields) {
-        User userToUpdate = getUser(id);
+        User userToUpdate = get(id);
         userToUpdate.update(fields);
         userRepository.save(userToUpdate);
     }
 
     public void delete(String id) {
-        User userToDelete = getUser(id);
+        User userToDelete = get(id);
         userRepository.delete(userToDelete);
     }
 
-    public User getUser(String id) {
+    public User get(String id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
-
-
-    // TODO CON MIGUE: Validar update.
-    // TODO PA CASA: Crear metodo delete. El metodo debe recibir un id y tal...
-    // TODO PA CASA: Crear un metodo get que devuelva un usuario. Debe recibir un id.
-    // TODO PA CASA: Refactor create para hacerlo con un DTO (como update)
-
 }

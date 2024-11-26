@@ -29,5 +29,7 @@ public class UserController {
         return ResponseEntity.ok(foundUsers.stream().map(UserResponse::from).toList());
     }
 
+    // TODO: Crear métodos update, delete y get en el controlador.
+
 
 }
