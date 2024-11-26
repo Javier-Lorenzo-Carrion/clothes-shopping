@@ -23,7 +23,7 @@ public class User {
         this.email = email;
     }
 
-    public static User create(CreateOrEditableUserFields fields) {
+    public static User create(CreatableUserFields fields) {
         String id = UUID.randomUUID().toString();
         User user = new User(id, fields.name(), fields.lastName(), fields.birthDate(), fields.email());
         if (!user.isValidDateFormat()) {
@@ -35,19 +35,12 @@ public class User {
         return user;
     }
 
-    public void update(CreateOrEditableUserFields fields) {
+    public void update(EditableUserFields fields) {
         if (fields.name() != null && !fields.name().isBlank()) setName(fields.name());
         if (fields.lastName() != null && !fields.lastName().isBlank()) setLastName(fields.lastName());
         if (fields.birthDate() != null && !fields.birthDate().isBlank()) setBirthDate(fields.birthDate());
         if (fields.email() != null && !fields.email().isBlank()) setEmail(fields.email());
     }
-
-    /*public void delete(User userToDelete) {
-        userToDelete.setName("");
-        userToDelete.setLastName("");
-        userToDelete.setBirthDate("");
-        userToDelete.setEmail("");
-    }*/
 
     private boolean isValidEmailFormat() {
         Pattern emailPattern = Pattern.compile("^([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x22([^\\x0d\\x22\\x5c\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x22)(\\x2e([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x22([^\\x0d\\x22\\x5c\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x22))*\\x40([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x5b([^\\x0d\\x5b-\\x5d\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x5d)(\\x2e([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x5b([^\\x0d\\x5b-\\x5d\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x5d))*$");

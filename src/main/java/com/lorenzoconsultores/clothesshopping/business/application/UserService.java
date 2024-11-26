@@ -14,7 +14,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User create(CreateOrEditableUserFields fields) {
+    public User create(CreatableUserFields fields) {
         userRepository.findByEmail(fields.email()).ifPresent(existingUser -> {
             throw new InvalidUserException(String.format("Email, %s, is already in use", existingUser.getEmail()));
         });
@@ -27,7 +27,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void update(String id, CreateOrEditableUserFields fields) {
+    public void update(String id, EditableUserFields fields) {
         User userToUpdate = userRepository.findById(id).get();
         userToUpdate.update(fields);
         userRepository.save(userToUpdate);
