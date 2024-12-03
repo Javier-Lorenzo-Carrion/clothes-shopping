@@ -29,6 +29,12 @@ public class UserController {
         return ResponseEntity.ok(foundUsers.stream().map(UserResponse::from).toList());
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody UpdateUserRequest updateUserRequest) {
+        userService.update(id, updateUserRequest.toFields());
+        return ResponseEntity.noContent().build();
+    }
+
     // TODO: Crear métodos update, delete y get en el controlador.
 
 

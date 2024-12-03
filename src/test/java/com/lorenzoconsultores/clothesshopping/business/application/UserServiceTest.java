@@ -109,7 +109,7 @@ class UserServiceTest {
             //When //Then
             Assertions.assertThatThrownBy(() -> userService.update(userUpdateable.getId(), editableUserFields))
                     .isInstanceOf(UserNotFoundException.class)
-                    .hasMessage("User not found");
+                    .hasMessage("User with id '" + userUpdateable.getId() + "' not found.");
         }
     }
 
@@ -137,7 +137,7 @@ class UserServiceTest {
             //When //Then
             Assertions.assertThatThrownBy(() -> userService.delete(userToDelete.getId()))
                     .isInstanceOf(UserNotFoundException.class)
-                    .hasMessage("User not found");
+                    .hasMessage("User with id '" + userToDelete.getId() + "' not found.");
         }
     }
 
@@ -170,7 +170,7 @@ class UserServiceTest {
             //When //Then
             Assertions.assertThatThrownBy(() -> userService.get(userToGet.getId()))
                     .isInstanceOf(UserNotFoundException.class)
-                    .hasMessage("User not found");
+                    .hasMessage("User with id '" + userToGet.getId() + "' not found.");
         }
     }
 }

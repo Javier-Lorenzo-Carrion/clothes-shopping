@@ -93,4 +93,39 @@ public class UserControllerIntegrationTest {
                     .andDo(MockMvcResultHandlers.print());
         }
     }
+
+    @Nested
+    @DisplayName("PATCH /users/{id}")
+    class UpdateUser {
+        @Test
+        public void should_update_existing_user() throws Exception {
+            //Given
+            UUID id = UUID.randomUUID();
+            UserEntity userToUpdate = new UserEntity(id, "Lolo", "Cabrera", "15/09/1989", "sepelio@gmail.com");
+            userJPARepository.saveAndFlush(userToUpdate);
+            //When
+            mockMvc.perform(MockMvcRequestBuilders.patch("/users/" + id).contentType(MediaType.APPLICATION_JSON).content("""
+                    {"name": "Pepe"}
+                    """)).andExpect(MockMvcResultMatchers.status().isNoContent());
+            //Then
+            Optional<UserEntity> updatedUser = userJPARepository.findById(id);
+            Assertions.assertThat(updatedUser.isPresent()).isTrue();
+            Assertions.assertThat(updatedUser.get().getName()).isEqualTo("Pepe");
+            Assertions.assertThat(updatedUser.get().getLastName()).isEqualTo("Cabrera");
+            Assertions.assertThat(updatedUser.get().getBirthDate()).isEqualTo("15/09/1989");
+            Assertions.assertThat(updatedUser.get().getEmail()).isEqualTo("sepelio@gmail.com");
+        }
+
+        @Test
+        public void should_fail_when_update_non_existing_user() throws Exception {
+            //Given
+            UUID id = UUID.randomUUID();
+            //When //Then
+            mockMvc.perform(MockMvcRequestBuilders.patch("/users/" + id).contentType(MediaType.APPLICATION_JSON).content("""
+                            {"name": "Carolina"}
+                            """))
+                    .andExpect(MockMvcResultMatchers.status().isNotFound())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is("User with id '" + id + "' not found.")));
+        }
+    }
 }

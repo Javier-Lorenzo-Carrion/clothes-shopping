@@ -39,6 +39,6 @@ public class UserService {
     }
 
     public User get(String id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id '" + id + "' not found."));
     }
 }

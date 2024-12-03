@@ -40,6 +40,7 @@ public class User {
         if (fields.lastName() != null && !fields.lastName().isBlank()) setLastName(fields.lastName());
         if (fields.birthDate() != null && !fields.birthDate().isBlank()) setBirthDate(fields.birthDate());
         if (fields.email() != null && !fields.email().isBlank()) setEmail(fields.email());
+        // FIXME: OJO QUE ESTE METODO ESTA ADMITIENDO EDITAR EL EMAIL Y LA FECHA NACIMIENTO SIN COMRPOBAR QUE LOS FORMATOS SEAN CORRECTOS
     }
 
     private boolean isValidEmailFormat() {

@@ -1,15 +1,15 @@
 package com.lorenzoconsultores.clothesshopping.infrastructure.rest.user;
 
-import com.lorenzoconsultores.clothesshopping.business.domain.CreatableUserFields;
+import com.lorenzoconsultores.clothesshopping.business.domain.EditableUserFields;
 
-public class CreateUserRequest {
+public class UpdateUserRequest {
 
     private String name;
     private String lastName;
     private String birthDate;
     private String email;
 
-    public CreateUserRequest(String name, String lastName, String birthDate, String email) {
+    public UpdateUserRequest(String name, String lastName, String birthDate, String email) {
         this.name = name;
         this.lastName = lastName;
         this.birthDate = birthDate;
@@ -48,8 +48,7 @@ public class CreateUserRequest {
         this.email = email;
     }
 
-    public CreatableUserFields toFields() {
-        return new CreatableUserFields(name, lastName, birthDate, email);
+    public EditableUserFields toFields() {
+        return new EditableUserFields(name, lastName, birthDate, email);
     }
-
 }
