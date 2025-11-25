@@ -128,4 +128,32 @@ public class UserControllerIntegrationTest {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is("User with id '" + id + "' not found.")));
         }
     }
+
+    @Nested
+    @DisplayName("DELETE /users/{id}")
+    class DeleteUser {
+        @Test
+        public void should_delete_existing_user() throws Exception {
+            //Given
+            UUID id = UUID.randomUUID();
+            UserEntity userToDelete = new UserEntity(id, "Pepe", "Rojas", "15/03/1989", "peperojas@gmail.com");
+            userJPARepository.saveAndFlush(userToDelete);
+            //When
+            mockMvc.perform(MockMvcRequestBuilders.delete("/users/" + id))
+                    .andExpect(MockMvcResultMatchers.status().isNoContent());
+            //Then
+            Optional<UserEntity> deletedUser = userJPARepository.findById(id);
+            Assertions.assertThat(deletedUser.isPresent()).isFalse();
+        }
+
+        @Test
+        public void should_fail_when_delete_non_existing_user() throws Exception {
+            //Given
+            UUID id = UUID.randomUUID();
+            //When //Then
+            mockMvc.perform(MockMvcRequestBuilders.delete("/users/" + id))
+                    .andExpect(MockMvcResultMatchers.status().isNotFound())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is("User with id '" + id + "' not found.")));
+        }
+    }
 }

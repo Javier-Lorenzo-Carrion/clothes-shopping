@@ -35,7 +35,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    // TODO: Crear métodos update, delete y get en el controlador.
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // TODO: Crear método get por ID en el controlador.
 
 
 }
